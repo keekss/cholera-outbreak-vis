@@ -19,6 +19,8 @@ import plotly.express as px
 
 import dash_daq as daq
 
+import plotly.graph_objects as go
+
 
 # Load tsv file
 deaths_df = pd.read_csv('data/choleraDeaths.tsv', sep='\t')
@@ -44,9 +46,38 @@ deaths_graph = px.line(
     x='Date', 
     y=deaths_graph_df.columns)
 
+naples_df = pd.read_csv(
+    'data/naplesCholeraAgeSexData.tsv',
+    sep='\t',
+    skiprows = 6
+)
+
+age_groups = naples_df['age']
+
+naples_graph = go.Figure(data=[
+    go.Bar(name='Male', x=age_groups, y=naples_df['male']),
+    go.Bar(name='Female', x=age_groups, y=naples_df['female'])
+])
+
+naples_graph.update_layout(barmode='group')
+
+census_df = pd.read_csv('data/UKcensus1851.csv', skiprows=3)
+
+
+pump_locs_df = pd.read_csv('data/choleraPumpLocations.csv')
+
+death_locs_df = pd.read_csv('data/choleraDeathLocations.csv', error_bad_lines=False)
+
+
+death_locs_graph = px.scatter_geo(
+    death_locs_df,
+    lon = death_locs_df.iloc[:,1],
+    lat = death_locs_df.iloc[:,2],
+    size = death_locs_df.iloc[:,0]
+)
+
+
 app = dash.Dash(__name__)
-
-
 
 
 app.layout = html.Div(
@@ -122,10 +153,19 @@ app.layout = html.Div(
     ),
 
     dcc.Graph(
-        id = 'deaths-graph',
+        className = 'graph',
         figure = deaths_graph
+    ),
 
-    )
+    dcc.Graph(
+        className = 'graph',
+        figure = naples_graph
+    ),
+
+    dcc.Graph(
+        className = 'graph',
+        figure = death_locs_graph
+    ),
 ])
 
 extra_info_dict = {

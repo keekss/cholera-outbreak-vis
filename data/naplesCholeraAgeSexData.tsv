@@ -4,9 +4,9 @@
 # For more information about Cholera in Naples:
 # https://www.nejm.org/doi/full/10.1056/NEJM199610103351520
 
-age male	female
-0-1 8.2	8.9
-2-5 14.0	14.7
+age	male	female
+0-1	8.2	8.9
+2-5	14.0	14.7
 6-10	12.1	11.2
 11-15	7.8	7.1
 16-20	7.2	7.2

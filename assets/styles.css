@@ -12,6 +12,11 @@ h1, h4 {
     color: whitesmoke
 }
 
+.graph {
+    margin: auto;
+    padding: 10px
+}
+
 body {
     background-color: #272727;
 }
