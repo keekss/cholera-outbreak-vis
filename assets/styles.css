@@ -1,0 +1,22 @@
+h1, h4 {
+    font-family: Avenir;
+    text-align: center;
+    color: whitesmoke
+}
+
+/* .app-layout {
+    background-color: black
+} */
+
+.main-title {
+    color: whitesmoke
+}
+
+body {
+    background-color: #272727;
+}
+
+#extra-info-box {
+    font-family: Avenir;
+    color: whitesmoke
+}
