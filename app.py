@@ -1,26 +1,24 @@
 # Run with terminal command 'python3 app.py'
 # View at http://127.0.0.1:8050/ in your web browser
 
-# Potential extra installs:
-## dash_daq
-## dash_table
+# Note: you may need to install additional libraries
+# if using a virtual environment, e.g.:
+## dash
 ## dash_bootstrap_components
+## dash_daq
+
+import pandas as pd
 
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table as dt
-import pandas as pd
 import dash_bootstrap_components as dbc
+import dash_daq as daq
 from dash.dependencies import Input, Output, State
 
-
 import plotly.express as px
-
-import dash_daq as daq
-
 import plotly.graph_objects as go
-
 
 # Load tsv file
 deaths_df = pd.read_csv('data/choleraDeaths.tsv', sep='\t')
@@ -40,11 +38,21 @@ deaths_cumul = deaths_df['Daily Deaths'].cumsum()
 deaths_graph_df = deaths_df.copy()
 deaths_graph_df.insert(2, 'Cumulative Attacks', attacks_cumul)
 deaths_graph_df.insert(4, 'Cumulative Deaths', deaths_cumul)
+# Delete dates; use integers 0 to 41 instead to represent
+# days since August 19, 1854
+deaths_graph_df.drop(columns=['Date'], axis=0, inplace=True)
 
 deaths_graph = px.line(
-    deaths_graph_df, 
-    x='Date', 
-    y=deaths_graph_df.columns)
+    deaths_graph_df,
+    # leave out x variable since it is (0,1,...n) by default
+    y=deaths_graph_df.columns,
+)
+deaths_graph.update_layout(
+    title='Cholera Attacks and Deaths in London',
+    xaxis_title = 'Days Elapsed Since August 19, 1854',
+    yaxis_title = 'Number of People',
+    legend_title = '',
+)
 
 naples_df = pd.read_csv(
     'data/naplesCholeraAgeSexData.tsv',
@@ -129,23 +137,25 @@ app.layout = html.Div(
     ),
 
     html.Div(
-        dt.DataTable(
-            id = 'deaths-table',
-            data = deaths_df.to_dict('records'),
-            columns = [{'name': i, 'id': i} for i in deaths_df.columns],
-            style_data_conditional = [{
-                'if': {'row_index': 'odd'},
-                'backgroundColor': 'rgb(248, 248, 248)'
+        className = 'graph-box',
+        children = [
+            dt.DataTable(
+                id = 'deaths-table',
+                data = deaths_df.to_dict('records'),
+                columns = [{'name': i, 'id': i} for i in deaths_df.columns],
+                style_data_conditional = [{
+                    'if': {'row_index': 'odd'},
+                    'backgroundColor': 'rgb(248, 248, 248)'
+                    }
+                ],
+                style_cell = {
+                    'font-family': 'Avenir',
+                },
+                style_header = {
+                    'backgroundColor': 'rgb(230, 230, 230)',
+                    'fontWeight': 'bold'
                 }
-            ],
-            style_cell = {
-                'font-family': 'Avenir',
-            },
-            style_header = {
-                'backgroundColor': 'rgb(230, 230, 230)',
-                'fontWeight': 'bold'
-            }
-        ),
+            )],
         style = {
             'margin': 'auto',
             'width': '60%',
@@ -154,7 +164,7 @@ app.layout = html.Div(
 
     dcc.Graph(
         className = 'graph',
-        figure = deaths_graph
+        figure = deaths_graph,
     ),
 
     dcc.Graph(

@@ -12,9 +12,23 @@ h1, h4 {
     color: whitesmoke
 }
 
-.graph {
-    margin: auto;
-    padding: 10px
+/*
+    Maintain 16:9 aspect ratio
+    Referenced https://stackoverflow.com/questions/1495407/maintain-the-aspect-ratio-of-a-div-with-css
+*/
+.graph-box {
+    /* margin: auto;
+    padding: 10px;
+    background: white; */
+    /* box-sizing: border-box; */
+    /* resize: horizontal; */
+    /* max-width: 95%;
+    height: calc(0.5625vw) */
+    display: grid;
+}
+
+.graph-box > * {
+    grid-area: 16/9;
 }
 
 body {
