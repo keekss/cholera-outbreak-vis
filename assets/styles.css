@@ -1,16 +1,41 @@
-h1, h4 {
+h1, h2, h3, h4, h5 {
     font-family: Avenir;
     text-align: center;
-    color: whitesmoke
+    color: whitesmoke;
+}
+
+Section {
+    background-color: #272727;
+    padding: 6px;
+    border-style: ridge;
+    border-width: 2px;
+    margin: 8px;
 }
 
 /* .app-layout {
     background-color: black
 } */
 
-.main-title {
-    color: whitesmoke
+#main-title {
+    color: whitesmoke;
+    font-size: 36px;
+    margin: 8px 0px 0px 0px;
 }
+
+#subtitle {
+    margin: 0px
+}
+
+#extra-info-dropdown {
+    width: 40%;
+    margin: auto;
+}
+
+/* #extra-info-box {
+    color: whitesmoke;
+    text-align: center;
+
+} */
 
 /*
     Maintain 16:9 aspect ratio
@@ -32,7 +57,7 @@ h1, h4 {
 }
 
 body {
-    background-color: #272727;
+    background-color: #0a0a0a;
 }
 
 #extra-info-box {
