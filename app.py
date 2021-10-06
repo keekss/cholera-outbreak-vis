@@ -178,131 +178,126 @@ death_locs_graph.update_geos(fitbounds='locations')
 app = dash.Dash(__name__)
 
 app.layout = html.Div(
-    # className = 'app-layout',
-    children = [
-    html.Section(
+    html.Section(children = [
+        html.Section(children = [
+            html.Div(
+                id = 'title-container',
+                children = [
+                html.H1(
+                    'Cholera Deaths Visualization',
+                    id = 'main-title',
+                ),
+                html.H5(
+                    'ICS 484 - Project 1 - Kiko Whiteley, Fall 2021',
+                    id = 'subtitle'
+                ),
+                html.H3(
+                    'Visualizing reported symptoms (attacks) of Cholera and related deaths along with population features in London and Naples for 42 days, beginning on August 19, 1854.'
+                )
+            ]),
+            html.Div(
+                id = 'extra-info-container',
+                children = [
+                html.H2('Extra Info - Select'),
+                dcc.Dropdown(
+                    id = 'extra-info-dropdown',
+                    options = [
+                        {'label': 'Data\'s Origin', 'value': 'origin'},
+                        {'label': 'Visualization Tools & Libraries', 'value': 'tools'},
+                        {'label': 'Author', 'value': 'author'},
+                        {'label': 'None', 'value': 'none'},
+                    ]
+                ),
+                html.H3(id = 'extra-info-text')
+            ])
+        ]),
+        dcc.Tabs(
+        id = 'tabs',
+        parent_className = 'custom-tabs',
+        className = 'custom-tabs-container',
         children = [
-            html.H1(
-                'Cholera Deaths Visualization',
-                id = 'main-title',
+            dcc.Tab(
+                label = '1: Daily & Cumulative Incidents',
+                value = 'tab-1',
+                className = 'graph-tab',
+                children = [
+                    html.Div(id = 'deaths-table', children = [
+                        dt.DataTable(
+                            data = deaths_df.to_dict('records'),
+                            columns = [{'name': i, 'id': i} for i in deaths_df.columns],
+                            style_data_conditional = [{
+                                'if': {'row_index': 'odd'},
+                                'backgroundColor': 'rgb(248, 248, 248)'
+                                }
+                            ],
+                            style_cell = {
+                                'font-family': 'Avenir',
+                            },
+                            style_header = {
+                                'backgroundColor': 'rgb(230, 230, 230)',
+                                'fontWeight': 'bold'
+                            }
+                        )
+                    ]),
+                    html.Div(id = 'deaths-graph', children = [
+                        dcc.Graph(
+                            # className = 'graph',
+                            figure = deaths_graph,
+                        ),
+                    ])    
+                ]
             ),
-            html.H5(
-                'ICS 484 - Project 1 - Kiko Whiteley, Fall 2021',
-                id = 'subtitle'
+            dcc.Tab(
+                label = '2A: Gender-grouped Chart of Deaths in Naples During the Same Time Period',value = 'tab-2a',
+                className = 'graph-tab',
             ),
-            html.H3(
-                'Visualizing reported symptoms of Cholera (attacks) and related deaths in London and Naples for 42 days, beginning on August 19, 1854.'
-            )
-        ]
-    ),
-    # Referenced https://stackoverflow.com/questions/50213761/changing-visibility-of-a-dash-component-by-updating-other-component
-    html.Section(
-        id = 'extra-info',
-        children = [
-            html.H2('Extra Info - Select'),
-            dcc.Dropdown(
-                id = 'extra-info-dropdown',
-                options = [
-                    {'label': 'Data\'s Origin', 'value': 'origin'},
-                    {'label': 'Visualization Tools & Libraries', 'value': 'tools'},
-                    {'label': 'Author', 'value': 'author'},
-                    {'label': 'None', 'value': 'none'},
-
-                ]),
-            html.H3(id = 'extra-info-box'),
-        ]
-    ),
-
-    ## Extras to add if possible
-    # html.H4(
-    #     'Include cumulative counts?',
-    # ),
-    # html.Div(
-    #     daq.ToggleSwitch(
-    #         id = 'cumul-toggle',
-    #         value = False,
-    #         color = 'green',
-    #     ),
-    #     style = {
-    #         'width': '200px',
-    #         'margin': 'auto',
-    #     },
-    # ),
-
-    # dcc.Slider(
-    #     id = 'days-slider',
-    #     min = 1,
-    #     max = deaths_df.shape[0],
-    #     step = 1,
-    # ),
-
-    html.Section(
-        html.Div(
-            children = [
-                html.H1('1A: Table of Daily Incidents in London'),
-                dt.DataTable(
-                    id = 'deaths-table',
-                    data = deaths_df.to_dict('records'),
-                    columns = [{'name': i, 'id': i} for i in deaths_df.columns],
-                    style_data_conditional = [{
-                        'if': {'row_index': 'odd'},
-                        'backgroundColor': 'rgb(248, 248, 248)'
-                        }
-                    ],
-                    style_cell = {
-                        'font-family': 'Avenir',
-                    },
-                    style_header = {
-                        'backgroundColor': 'rgb(230, 230, 230)',
-                        'fontWeight': 'bold'
-                    }
-                )],
-            style = {
-                'margin': 'auto',
-                'width': '60%',
-        }
-        )
-    ),
-
-    html.Section(
-        children = [
-            html.H1('1B: Graph of Time-Series Incidents'),
-            dcc.Graph(
-                className = 'graph',
-                figure = deaths_graph,
+            dcc.Tab(
+                label = '2B: Gender-grouped Breakdown of Age Groups from the 1851 UK Census', 
+                value = 'tab-2b',
+                className = 'graph-tab',                
+                children = [
+                    dcc.Graph(
+                        className = 'graph',
+                        figure = census_graph
+                    ),
+                ]    
             ),
-        ]
-    ),
+            dcc.Tab(
+                label = '3: Size-scaled Map of Death Locations', 
+                value = 'tab-3',
+                className = 'graph-tab',                
+                children = [
+                    dcc.Graph(
+                        className = 'graph',
+                        figure = death_locs_graph
+                    ),
+                ]    
+            ),
+        ]),
+        html.Div(id = 'tabs-content')
+    ]),
+)
 
-    html.Section(
-        children = [
-            html.H1('2A: Gender-grouped Chart of Deaths in Naples During the Same Time Period'),
-            dcc.Graph(
-                className = 'graph',
-                figure = naples_graph
-            ),
-        ]
-    ),
-    html.Section(
-        children = [
-            html.H1('2B: Gender-grouped Breakdown of Age Groups from the 1851 UK Census'),
-            dcc.Graph(
-                className = 'graph',
-                figure = census_graph,
-            ),
-        ]
-    ),
-    html.Section(
-        children = [
-            html.H1('3) Size-scaled Map of Death Locations'),
-            dcc.Graph(
-                className = 'graph',
-                figure = death_locs_graph
-            ),
-        ]
-
-    ),
-])
+@app.callback(Output('tabs-content', 'children'),
+              Input('tabs', 'value'))
+def render_content(tab):
+    if tab == 'tab-2a':
+        return dcc.Graph(
+            className = 'graph',
+            figure = naples_graph
+        ),
+    elif tab == 'tab-1':
+        return html.Div([
+            html.H3('Tab content 2')
+        ])
+    elif tab == 'tab-2b':
+        return html.Div([
+            html.H3('Tab content 3')
+        ])
+    elif tab == 'tab-3':
+        return html.Div([
+            html.H3('Tab content 4')
+        ])
 
 extra_info_dict = {
     'origin': [
@@ -316,7 +311,7 @@ extra_info_dict = {
 }
 
 @app.callback(
-   Output('extra-info-box', 'children'),
+   Output('extra-info-text', 'children'),
    Input('extra-info-dropdown', 'value'))
 def choose_extra_info(choice):
     if choice and extra_info_dict[choice]:

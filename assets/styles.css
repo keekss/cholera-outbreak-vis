@@ -1,23 +1,65 @@
 h1, h2, h3, h4, h5 {
     font-family: Avenir;
     text-align: center;
-    color: whitesmoke;
 }
 
 Section {
-    background-color: #272727;
+    background-color: whitesmoke;
     padding: 6px;
     border-style: ridge;
     border-width: 2px;
     margin: 8px;
 }
 
-/* .app-layout {
-    background-color: black
-} */
+Div {
+    display: inline-block;
+    margin: auto;
+}
+
+.graph {
+    width: calc(100% - 100px);
+}
+
+#title-container {
+    width: 45%;
+    padding: 10px;
+    padding-right: 100px;
+}
+
+#extra-info-container {
+    float: right;
+    width: 45%
+}
+
+#extra-info-dropdown {
+    margin: auto;
+    width: 20%;
+}
+
+#extra-info-text {
+    font-family: Avenir;
+    text-align: center;
+}
+
+
+.custom-tabs-container {
+    vertical-align: top;
+}
+
+.graph-tab {
+    font-family: Avenir;
+    padding: 6px;
+    border-style: ridge;
+    border-width: 2px;
+    margin: 8px;
+    vertical-align: top;
+}
+
+.selected-graph-tab {
+    background-color: #EEEEEE;
+}
 
 #main-title {
-    color: whitesmoke;
     font-size: 36px;
     margin: 8px 0px 0px 0px;
 }
@@ -26,9 +68,17 @@ Section {
     margin: 0px
 }
 
-#extra-info-dropdown {
-    width: 40%;
-    margin: auto;
+#deaths-table {
+    float: left;
+    vertical-align: top;
+    padding: 50px 50px 50px 50px;
+}
+
+#deaths-graph {
+    float: right;
+    vertical-align: top;
+    padding: 50px 50px 50px 50px;
+
 }
 
 /* #extra-info-box {
@@ -41,7 +91,8 @@ Section {
     Maintain 16:9 aspect ratio
     Referenced https://stackoverflow.com/questions/1495407/maintain-the-aspect-ratio-of-a-div-with-css
 */
-.graph-box {
+
+/* .graph-box { */
     /* margin: auto;
     padding: 10px;
     background: white; */
@@ -49,18 +100,16 @@ Section {
     /* resize: horizontal; */
     /* max-width: 95%;
     height: calc(0.5625vw) */
-    display: grid;
+    /* display: grid;
 }
 
 .graph-box > * {
     grid-area: 16/9;
-}
+} */
 
 body {
-    background-color: #0a0a0a;
+    background-color: #272727;
+    padding: 5px;
+    margin: auto;
 }
 
-#extra-info-box {
-    font-family: Avenir;
-    color: whitesmoke
-}
