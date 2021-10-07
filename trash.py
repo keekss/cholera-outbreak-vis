@@ -39,3 +39,46 @@
 #     if n:
 #         return not is_open
 #     return is_open
+
+
+
+        #     # Referenced https://stackoverflow.com/questions/50213761/changing-visibility-of-a-dash-component-by-updating-other-component
+        #     html.Section(
+        #         id = 'extra-info',
+        #         children = [
+        #             html.H2('Extra Info - Select'),
+        #             dcc.Dropdown(
+        #                 id = 'extra-info-dropdown',
+        #                 options = [
+        #                     {'label': 'Data\'s Origin', 'value': 'origin'},
+        #                     {'label': 'Visualization Tools & Libraries', 'value': 'tools'},
+        #                     {'label': 'Author', 'value': 'author'},
+        #                     {'label': 'None', 'value': 'none'},
+
+        #                 ]),
+        #             html.H3(id = 'extra-info-box'),
+        #         ]
+        #     ),
+
+            ## Extras to add if possible
+            # html.H4(
+            #     'Include cumulative counts?',
+            # ),
+            # html.Div(
+            #     daq.ToggleSwitch(
+            #         id = 'cumul-toggle',
+            #         value = False,
+            #         color = 'green',
+            #     ),
+            #     style = {
+            #         'width': '200px',
+            #         'margin': 'auto',
+            #     },
+            # ),
+
+            # dcc.Slider(
+            #     id = 'days-slider',
+            #     min = 1,
+            #     max = deaths_df.shape[0],
+            #     step = 1,
+            # ),

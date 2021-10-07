@@ -1,58 +1,100 @@
-h1, h2, h3, h4, h5 {
+body {
+    background-color: #181818;
+    padding: 10px;
+    /*
+    display: flex;
+    justify-content: center; */
+}
+
+h1, h2, h3, h4, h5, h6 {
     font-family: Avenir;
     text-align: center;
+    padding: 2px 8px 2px 8px;
 }
 
 Section {
-    background-color: whitesmoke;
-    padding: 6px;
+    background-color: #272727;
+    color: whitesmoke;
+    padding: 6px 6px 6px 6px;
     border-style: ridge;
-    border-width: 2px;
-    margin: 8px;
+    border-width: 3px;
+    min-height: 180px;
+    /* margin-left: 50%;
+    transform: translateX(-50%); */
 }
 
-Div {
-    display: inline-block;
+#extra-info-dropdown {
+    font-family: Avenir;
+    width: 80%;
     margin: auto;
+    color: black;
+    padding: 10px;
 }
 
-.graph {
-    width: calc(100% - 100px);
-}
+/* .VirtualizedSelectFocusedOption {
+    background-color: black;
+} */
 
-#title-container {
-    width: 45%;
+
+/* 
+Div {
+    display: inline;
+} */
+
+/* #title-container {
+    width: 50%;
     padding: 10px;
     padding-right: 100px;
 }
 
 #extra-info-container {
     float: right;
-    width: 45%
+    width: 40%
 }
 
-#extra-info-dropdown {
-    margin: auto;
-    width: 20%;
-}
+*/
 
 #extra-info-text {
-    font-family: Avenir;
-    text-align: center;
+    padding-top: 12px;
+    width: 90%;
+    margin: auto;
 }
 
+#tabs {
+    margin-top: 10px;    
+}
+/*
 
-.custom-tabs-container {
+#tabs-content {
+
+}
+
+.graph {
     vertical-align: top;
+    width: 800px;
+    margin: auto;
+} */
+
+
+
+/* .custom-tabs-container {
+    vertical-align: top;
+    background-color: green;
+    margin: auto;
+} */
+
+.graph-container {
+    background-color: pink;
+    width: 95%;
+    margin: auto;
 }
+
+
 
 .graph-tab {
     font-family: Avenir;
-    padding: 6px;
-    border-style: ridge;
-    border-width: 2px;
-    margin: 8px;
-    vertical-align: top;
+    font-size: 24px;
+    margin: 10px 0px 10px 0px;
 }
 
 .selected-graph-tab {
@@ -61,11 +103,11 @@ Div {
 
 #main-title {
     font-size: 36px;
-    margin: 8px 0px 0px 0px;
+    margin-top: 8px;
 }
 
 #subtitle {
-    margin: 0px
+    margin-top: 12px;
 }
 
 #deaths-table {
@@ -74,12 +116,16 @@ Div {
     padding: 50px 50px 50px 50px;
 }
 
-#deaths-graph {
+#deaths-graph-container {
     float: right;
     vertical-align: top;
     padding: 50px 50px 50px 50px;
-
+    width: 30%;
+    border-width: 3px;
+    border-color: black;
 }
+
+
 
 /* #extra-info-box {
     color: whitesmoke;
@@ -107,9 +153,5 @@ Div {
     grid-area: 16/9;
 } */
 
-body {
-    background-color: #272727;
-    padding: 5px;
-    margin: auto;
-}
+
 
