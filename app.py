@@ -387,33 +387,23 @@ census_graph = dcc.Graph(
     className = 'graph'
 )
 
-# Load 2 tree maps
-# import plotly.io as pio
-# from PIL import Image
-# tmm_img = Image.open("images/tree_map_male.png")
-# tmm_fig = go.Figure()
-
-# tmm_fig.add_layout_image(dict(source = tmm_img))
-
-# tmm = dcc.Graph(figure = tmm_fig)
-
-# import base64
-# tree_map_male = 'images/tree_map_male.png' # replace with your own image
-# encoded_image = base64.b64encode(open(tree_map_male, 'rb').read())
-# tree_map_male_img = html.Div([
-#     html.Img(src='data:image/png;base64,{}'.format(encoded_image))
-# ])
-
-tree_map_male = html.Div(
-    html.Img(
-        src=app.get_asset_url('tree_map_male.png'),
-        className = 'tree-map-img'),
-    
+img_box = dict(
+    paddingBottom = '8px',
 )
-tree_map_female = html.Div(
+
+tree_map_m = html.Div([
     html.Img(
-        src=app.get_asset_url('tree_map_female.png'),
-        className = 'tree-map-img')
+        src=app.get_asset_url('tree_map_m.png'),
+        className = 'image',
+    )],
+    style = img_box
+)
+tree_map_f = html.Div([
+    html.Img(
+        src=app.get_asset_url('tree_map_f.png'),
+        className = 'image',
+    )],
+    style = img_box
 )
 
 tab_2b = dbc.Row([
@@ -426,8 +416,11 @@ tab_2b = dbc.Row([
         margin = 'auto',
     )),
     dbc.Col(census_graph, width = 6),
-    dbc.Col(tree_map_male, width = 2),
-    dbc.Col(tree_map_female, width = 2),
+    dbc.Col([
+        dbc.Row([tree_map_m, html.H2('Male')]),
+        dbc.Row([tree_map_f, html.H2('Female')]),
+    ], width = 3, style = dict(margin = 'auto')
+    )
 ])
 
 pump_locs_df = pd.read_csv(
