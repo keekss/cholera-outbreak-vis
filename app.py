@@ -7,12 +7,14 @@
 ## dash_bootstrap_components
 ## dash_daq
 
+from re import template
 import pandas as pd
 
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table as dt
+from dash_table.Format import Format, Group
 import dash_bootstrap_components as dbc
 from plotly.express import data
 import dash_daq as daq
@@ -23,19 +25,6 @@ from dash_bootstrap_templates import load_figure_template
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-
-
-# death_lons = death_locs_df.iloc[:,1]
-# death_lats = death_locs_df.iloc[:,2]
-
-# layout = go.Layout(
-#     yaxis=dict(
-#         range=[0, 100]
-#     ),
-#     xaxis=dict(
-#         range=[100, 200]
-#     )
-# )
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SLATE])
 
@@ -51,7 +40,7 @@ app.layout = dbc.Container(fluid = True, children = [
                 # id = 'title-container',
                 children = [
                     html.H1(
-                        'Cholera Outbreak Visualization',
+                        '1854 Cholera Outbreak Visualization',
                         id = 'main-title',
                     ),
                     html.H6(
@@ -96,29 +85,29 @@ app.layout = dbc.Container(fluid = True, children = [
         id = 'tabs',
         colors = {
             'primary': 'black',
-            'background': 'gray',
+            'background': '#272727',
             'border': 'whitesmoke'
         },
         parent_className = 'custom-tabs',
         className = 'custom-tabs-container',
         children = [
             dcc.Tab(
-                label = '1: Daily & Cumulative Incidents',
+                label = 'London: Daily & Cumulative Incidents',
                 value = 'tab-1',
                 className = 'graph-tab',
             ),
             dcc.Tab(
-                label = '2A: Gender-grouped Chart of Deaths in Naples During the Same Time Period',
+                label = 'Naples: Deaths vs. Gender & Age',
                 value = 'tab-2a',
                 className = 'graph-tab',
             ),
             dcc.Tab(
-                label = '2B: Gender-grouped Breakdown of Age Groups from the 1851 UK Census', 
+                label = 'UK: Gender & Age Breakdown', 
                 value = 'tab-2b',
                 className = 'graph-tab',
             ),
             dcc.Tab(
-                label = '3: Size-scaled Map of Death Locations', 
+                label = 'London: Death & Pump Locations', 
                 value = 'tab-3',
                 className = 'graph-tab',
             ),
@@ -127,68 +116,69 @@ app.layout = dbc.Container(fluid = True, children = [
     ]),
 ])
 
-
-
 # Load tsv file
-deaths_df = pd.read_csv('data/choleraDeaths.tsv', sep='\t')
+london_df = pd.read_csv('data/choleraDeaths.tsv', sep='\t')
 
 # Rename columns; modify original
-deaths_df.rename(
-    columns = {'Date': 'Date', 'Attack': 'Attacks', 'Death': 'Deaths'},
+london_df.rename(
+    columns = {'Attack': 'Attacks', 'Death': 'Deaths'},
     inplace = True
 )
 
-daily_total = deaths_df['Attacks'] + deaths_df['Deaths']
-deaths_df.insert(3, 'Total', daily_total)
+daily_total = london_df['Attacks'] + london_df['Deaths']
+london_df.insert(3, 'Total', daily_total)
 
 # Create new columns with running totals of attacks and deaths
 # Referenced https://www.geeksforgeeks.org/cumulative-sum-of-a-column-in-pandas-python/
-attacks_cumul = deaths_df['Attacks'].cumsum()
-deaths_cumul = deaths_df['Deaths'].cumsum()
+attacks_cumul = london_df['Attacks'].cumsum()
+deaths_cumul = london_df['Deaths'].cumsum()
 
 # Insert cumulative columns into a new dataframe
-deaths_graph_df = deaths_df.copy()
+london_lineg_df = london_df.copy()
 # Delete dates; use integers 0 to 41 instead to represent
 # days since August 19, 1854
-deaths_graph_df.drop(columns=['Date'], axis=0, inplace=True)
-deaths_graph_df.drop(columns=['Total'], axis=0, inplace=True)
+london_lineg_df.drop(columns=['Date'], axis=0, inplace=True)
+london_lineg_df.drop(columns=['Total'], axis=0, inplace=True)
 # Rename for legend
-deaths_graph_df.rename(
+london_lineg_df.rename(
     columns = {'Attacks': 'Daily Attacks', 'Deaths': 'Daily Deaths'},
     inplace = True
 )
-deaths_graph_df.insert(1, 'Cumulative Attacks', attacks_cumul)
-deaths_graph_df.insert(3, 'Cumulative Deaths', deaths_cumul)
+london_lineg_df.insert(1, 'Cumulative Attacks', attacks_cumul)
+london_lineg_df.insert(3, 'Cumulative Deaths', deaths_cumul)
 
-deaths_table = dt.DataTable(
-    data = deaths_df.to_dict('records'),
-    columns = [{'name': i, 'id': i} for i in deaths_df.columns],
-    style_data_conditional = [{
-        'if': {'row_index': 'odd'},
-        'backgroundColor': '#333333'
-        }
-    ],
-    style_cell = {
-        'backgroundColor': '#222222',
-        'fontFamily': 'Avenir',
-        'color': 'whitesmoke',
-        'padding': '4px 10px 4px 10px',
-        'width': '80px'
-    },
-    style_header = {
-        'backgroundColor': 'black',
-        'fontWeight': 'bold',
-        'padding': '4px 10px 4px 10px',
-        'text-align': 'center'
+table_style_cond = [{
+    'if': {'row_index': 'odd'},
+    'backgroundColor': '#363636'
+}]
+table_style_cell = {
+    'backgroundColor': '#222222',
+    'fontFamily': 'Avenir',
+    'color': 'whitesmoke',
+    'padding': '4px 10px 4px 10px',
+    'width': '80px',
+}
+table_style_header = {
+    'backgroundColor': 'black',
+    'fontWeight': 'bold',
+    'padding': '4px 10px 4px 10px',
+    'text-align': 'center'
+}
 
-    },
-    page_size = 21
+london_table = dt.DataTable(
+    data = london_df.to_dict('records'),
+    columns = [{'name': i, 'id': i} for i in london_df.columns],
+    style_data_conditional = table_style_cond,
+    style_cell = table_style_cell,
+    style_header = table_style_header,
+    fixed_rows = {'headers': True},
+    style_table = {'maxHeight': 770},
 )
 
-deaths_graph = px.line(
-    deaths_graph_df,
+london_lineg_fig = px.line(
+    london_lineg_df,
     # leave out x variable since it is (0,1,...n) by default
-    y = deaths_graph_df.columns,
+    y = london_lineg_df.columns,
     # Customize colors
     # Referenced https://community.plotly.com/t/plotly-express-line-chart-color/27333/4
     template = 'plotly_dark',
@@ -200,19 +190,19 @@ deaths_graph = px.line(
     },
 )
 
-deaths_graph.update_layout(
+london_lineg_fig.update_layout(
     plot_bgcolor = '#181818',
     title='Attacks & Deaths in London vs. Time',
     title_x = 0.5,
     xaxis_title = 'Days Elapsed Since August 19, 1854',
     yaxis_title = 'Number of People',
     legend_title = '',
-    height = 800,
+    height = 770,
 )
 
 # Make cumulative lines dotted
 # Referenced https://stackoverflow.com/questions/67064045/plotly-highlight-line-with-dotted-dash-and-marker-with-fig-update-traces?rq=1
-deaths_graph.update_traces(
+london_lineg_fig.update_traces(
     patch = {
         'line': {'dash': 'dot'},
     },
@@ -220,7 +210,7 @@ deaths_graph.update_traces(
         'legendgroup': 'Cumulative Attacks',
     },
 )
-deaths_graph.update_traces(
+london_lineg_fig.update_traces(
     patch = {
         'line': {'dash': 'dot'},
     },
@@ -229,6 +219,15 @@ deaths_graph.update_traces(
     },
 )
 
+london_lineg = dcc.Graph(
+    figure = london_lineg_fig,
+    className = 'graph')
+
+tab_1 = dbc.Row([
+    dbc.Col(london_table, width = 3),
+    dbc.Col(london_lineg, width = 9),
+]),
+
 
 naples_df = pd.read_csv(
     'data/naplesCholeraAgeSexData.tsv',
@@ -236,107 +235,259 @@ naples_df = pd.read_csv(
     skiprows = 6
 )
 
-age_groups = naples_df['age']
-
-naples_graph = go.Figure(data=[
-    go.Bar(name='Male', x=age_groups, y=naples_df['male']),
-    go.Bar(name='Female', x=age_groups, y=naples_df['female'])
-])
-
-naples_graph.update_layout(
-    barmode='group',
-    title='Deaths in Naples vs. Age Group and Gender',
-    title_x = 0.5,
-    xaxis_title = 'Age Group (Years)',
-    yaxis_title = 'Deaths (Number of People)'
+naples_df.rename(
+    columns = {'age': 'Age', 'male': 'Male', 'female': 'Female'},
+    inplace = True
 )
 
-census_df = pd.read_csv('data/UKcensus1851.csv', skiprows=3)
+naples_table = dt.DataTable(
+    data = naples_df.to_dict('records'),
+    columns = [{'name': i, 'id': i} for i in naples_df.columns],
+    style_data_conditional = table_style_cond,
+    style_cell = table_style_cell,
+    style_header = table_style_header,
+    page_size = 21
+)
+
+age_groups = naples_df['Age']
+
+naples_fig = go.Figure(data=[
+    go.Bar(name='Male', x=age_groups, y=naples_df['Male']),
+    go.Bar(name='Female', x=age_groups, y=naples_df['Female'])
+])
+
+naples_fig.update_layout(
+    template = 'plotly_dark',
+    barmode='group',
+    title='Deaths in Naples vs. Age Group & Gender',
+    title_x = 0.5,
+    xaxis_title = 'Age Group (Years)',
+    yaxis_title = 'Deaths Per 10,000 People',
+    height = 770
+)
+
+naples_graph = dcc.Graph(
+    figure = naples_fig,
+    className = 'graph'
+)
+
+# Arbitrary choice: mean age of 80+ is 85.5 (81-90 approximation)
+age_means = [0.5, 3.5, 8, 13, 18, 30.5, 50.5, 70.5, 85.5]
+
+naples_df['Mean Age'] = age_means
+
+
+naples_lineg_fig = px.line(
+    naples_df,
+    x = 'Mean Age',
+    y = naples_df.columns[1:3],
+    template = 'plotly_dark',
+    # color_discrete_map = {
+    #     'Male': 'red',
+    #     'Female': 'blue',
+    # },
+)
+
+naples_lineg_fig.update_layout(
+    # plot_bgcolor = '#181818',
+    title = 'Deaths in Naples vs. Age Group & Gender',
+    title_x = 0.5,
+    yaxis_title = 'Deaths Per 10,000 People',
+    xaxis_title = 'Mean Age (Years)',
+    legend_title = 'Gender',
+    height = 770,
+)
+
+naples_lineg = dcc.Graph(
+    figure = naples_lineg_fig,
+    className = 'graph',
+)
+
+tab_2a = dbc.Row([
+    dbc.Col(naples_table, width = 2),
+    dbc.Col(naples_graph, width = 5),
+    dbc.Col(naples_lineg, width = 5),
+])
+
+census_df = pd.read_csv('data/UKcensus1851.csv', skiprows = 3)
+
+census_df.rename(
+    columns = {'age': 'Age', 'male': 'Male', 'female': 'Female'},
+    inplace = True
+)
+
+# Append entries for 'Total' row
+total_row = [
+    'Total',
+    census_df['Male'].sum(),
+    census_df['Female'].sum(),
+]
+
+census_table_df = census_df.copy()
+census_table_df.loc[-1] = total_row
+
+census_table = dt.DataTable(
+    data = census_table_df.to_dict('records'),
+    columns = [
+        dict(name = 'Age', id = 'Age'),
+        dict(name = 'Male', id = 'Male', type = 'numeric', format = Format().group(True)),
+        dict(name = 'Female', id = 'Female', type = 'numeric', format = Format().group(True)),        
+    ],
+    style_data_conditional = table_style_cond,
+    style_cell = table_style_cell,
+    style_header = table_style_header,
+)
+
+gender_fig = px.pie(
+    values = [census_df['Male'].iloc[-1], census_df['Female'].iloc[-1]],
+    names =  ['Male', 'Female'],
+    title = 'Proportion of Population by Gender',
+    template = 'plotly_dark',
+    width = 400,
+)
+
+gender_pie = dcc.Graph(
+    figure = gender_fig,
+    className = 'graph',
+)
 
 # Make side-by-side pie charts for age groups grouped by gender
 # Referenced https://plotly.com/python/pie-charts/
-census_graph = make_subplots(
+census_fig = make_subplots(
     rows = 1,
     cols = 2,
     specs=[[{'type':'domain'}, {'type':'domain'}]],
     subplot_titles = ('Male', 'Female'),
 )
-census_graph.add_trace(
+census_fig.add_trace(
     go.Pie(
-        labels = census_df['age'],
-        values = census_df['male'],
+        labels = census_df['Age'],
+        values = census_df['Male'],
         name = 'Male',
-    ), 1,1
+        # color_discrete_sequence = px.colors.sequential.GnBu
+    ), 1, 1
 )
-census_graph.add_trace(
+census_fig.add_trace(
     go.Pie(
-        labels = census_df['age'],
-        values = census_df['female'],
+        labels = census_df['Age'],
+        values = census_df['Female'],
         name = 'Female',
+        # color_discrete_sequence = px.colors.sequential.GnBu
     ), 1, 2
 )
-census_graph.update_traces(hole=.3, hoverinfo="label+percent+name")
+census_fig.update_traces(hole=.3, hoverinfo="label+percent+name")
 
-census_graph.update_layout(
+census_fig.update_layout(
+    template = 'plotly_dark',
     title_text = "Age Groups by Gender",
-    # Add annotations in the center of the donut pies.
-    # annotations=[dict(text='Male', x=0.18, y=0.5, font_size=20, showarrow=False),
-    #              dict(text='Female', x=0.82, y=0.5, font_size=20, showarrow=False)]
 )
 
-pump_locs_df = pd.read_csv('data/choleraPumpLocations.csv')
+census_graph = dcc.Graph(
+    figure = census_fig,
+    className = 'graph'
+)
+
+# Load 2 tree maps
+# import plotly.io as pio
+# from PIL import Image
+# tmm_img = Image.open("images/tree_map_male.png")
+# tmm_fig = go.Figure()
+
+# tmm_fig.add_layout_image(dict(source = tmm_img))
+
+# tmm = dcc.Graph(figure = tmm_fig)
+
+# import base64
+# tree_map_male = 'images/tree_map_male.png' # replace with your own image
+# encoded_image = base64.b64encode(open(tree_map_male, 'rb').read())
+# tree_map_male_img = html.Div([
+#     html.Img(src='data:image/png;base64,{}'.format(encoded_image))
+# ])
+
+tree_map_male = html.Div(
+    html.Img(
+        src=app.get_asset_url('tree_map_male.png'),
+        className = 'tree-map-img'),
+    
+)
+tree_map_female = html.Div(
+    html.Img(
+        src=app.get_asset_url('tree_map_female.png'),
+        className = 'tree-map-img')
+)
+
+tab_2b = dbc.Row([
+    dbc.Col([
+        dbc.Row(census_table),
+        dbc.Row(gender_pie),
+    ], 
+    width = 3,
+    style = dict(
+        margin = 'auto',
+    )),
+    dbc.Col(census_graph, width = 6),
+    dbc.Col(tree_map_male, width = 2),
+    dbc.Col(tree_map_female, width = 2),
+])
+
+pump_locs_df = pd.read_csv(
+    'data/choleraPumpLocations.csv',
+    names = ['Lon', 'Lat'])
 pump_lons = pump_locs_df.iloc[:,0]
 pump_lats = pump_locs_df.iloc[:,1]
 
 
-death_locs_df = pd.read_csv('data/choleraDeathLocations.csv', error_bad_lines=False)
-death_lons = death_locs_df.iloc[:,1]
-death_lats = death_locs_df.iloc[:,2]
+death_locs_df = pd.read_csv(
+    'data/choleraDeathLocations.csv',
+    names = ['Deaths', 'Lon', 'Lat'],
+    error_bad_lines=False)
 
-death_locs_graph = px.scatter_geo(
+death_locs_fig = px.scatter_mapbox(
     death_locs_df,
-    lon = death_lons,
-    lat = death_lats,
-    size = death_locs_df.iloc[:,0]
+    lon = death_locs_df['Lon'],
+    lat = death_locs_df['Lat'],
+    size = death_locs_df['Deaths'],
+    color_discrete_sequence = ['indianred'],
+    center = dict(
+        lon = death_locs_df['Lon'].mean(),
+        lat = death_locs_df['Lat'].mean(),
+    ),
+    zoom = 16,
+    height = 800,
+    template = 'plotly_dark',
+    
 )
-death_locs_graph.add_traces(go.Scattergeo(
+death_locs_fig.add_traces(go.Scattermapbox(
+    name = 'Pumps',
     lon = pump_lons,
     lat = pump_lats,
+    marker = go.scattermapbox.Marker(
+        size = 15,
+        color = 'yellowgreen',
+        # symbol = 'triangle-up'
+    )
+    
 ))
-
-death_locs_graph.update_geos(fitbounds='locations')
-
-tab_1 = dbc.Row([
-            dbc.Col(html.Div(deaths_table), width = 3),
-            dbc.Col(html.Div(dcc.Graph(
-                    className = 'graph',
-                    figure = deaths_graph,
-                ),
-                style = {
-                    'borderStyle': 'solid',
-                    'borderWidth': '3px',
-                    'borderColor': 'whitesmoke'
-                }
-            ),
-            width = 9,  
-            )]
-        ),
-
-tab_2a = html.Div(
-            className = 'graph-container',
-            children = [
-                html.H1('tt'),
-                dcc.Graph(
-                    className = 'graph',
-                    figure = naples_graph
-                )
-            ]
+death_locs_fig.update_layout(
+    legend = dict(
+        font = dict(
+            family = 'Avenir',
+            size = 36
+        )
+    ),
+    mapbox = dict(
+        style = 'carto-darkmatter',
+    )
 )
 
-tab_3 = dcc.Graph(
-        className = 'graph',
-        figure = death_locs_graph
-        ),
+deaths_graph = dcc.Graph(
+    className = 'graph',
+    figure = death_locs_fig
+)
+
+
+
+tab_3 = deaths_graph
 
 @app.callback(Output('tabs-content', 'children'),
               Input('tabs', 'value'))
@@ -346,20 +497,13 @@ def render_content(tab):
     elif tab == 'tab-2a':
         return tab_2a
     elif tab == 'tab-2b':
-        return html.Div([
-            html.H3('Tab content 2'),
-            dcc.Graph(
-                className = 'graph',
-                figure = census_graph
-            ),
-        ])
-    
+        return tab_2b
     elif tab == 'tab-3':
         return tab_3
 
 extra_info_dict = {
     'origin': [
-        'Data were created and compiled by Robin Wilson in January 2011.',
+        'The dataset was created and compiled by Robin Wilson in January 2011.',
         html.Br(),
         'For more of Dr. Wilson\'s work, see www.rtwilson.com/academic.',
         html.Br(),

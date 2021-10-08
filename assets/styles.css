@@ -31,6 +31,10 @@ Section {
     padding: 10px;
 }
 
+.tree-map-img {
+    height: 100px;
+}
+
 /* .VirtualizedSelectFocusedOption {
     background-color: black;
 } */
@@ -60,21 +64,22 @@ Div {
     margin: auto;
 }
 
-#tabs {
+/* #tabs {
     margin-top: 10px;    
-}
+} */
 /*
 
 #tabs-content {
 
 }
 
-.graph {
-    vertical-align: top;
-    width: 800px;
-    margin: auto;
-} */
+*/
 
+.graph {
+    border-style: solid;
+    border-width: 3px;
+    border-color: whitesmoke
+}
 
 
 /* .custom-tabs-container {
@@ -93,12 +98,9 @@ Div {
 
 .graph-tab {
     font-family: Avenir;
+    color: whitesmoke;
     font-size: 24px;
     margin: 10px 0px 10px 0px;
-}
-
-.selected-graph-tab {
-    background-color: #EEEEEE;
 }
 
 #main-title {
@@ -110,17 +112,16 @@ Div {
     margin-top: 12px;
 }
 
-#deaths-table {
+/* #deaths-table {
     float: left;
     vertical-align: top;
     padding: 50px 50px 50px 50px;
-}
+} */
 
 #deaths-graph-container {
     float: right;
     vertical-align: top;
     padding: 50px 50px 50px 50px;
-    width: 30%;
     border-width: 3px;
     border-color: black;
 }
