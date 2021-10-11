@@ -189,7 +189,7 @@ london_lineg_fig = px.line(
 
 graph_font = dict(
     family = 'Avenir',
-    size = 20,
+    size = 24,
 )
 
 london_lineg_fig.update_layout(
@@ -376,13 +376,14 @@ census_fig = make_subplots(
     rows = 1,
     cols = 2,
     specs=[[{'type':'domain'}, {'type':'domain'}]],
-    subplot_titles = ('Male', 'Female'),
+    # subplot_titles = ('Male', 'Female'),
 )
 census_fig.add_trace(
     go.Pie(
+        title = 'Male',
+        title_font_size = 36,
         labels = census_df['Age'],
         values = census_df['Male'],
-        name = 'Male',
         marker = dict(colors = px.colors.sequential.Viridis),
         legendgrouptitle = dict(text = 'Age')
         # color_discrete_sequence = px.colors.sequential.GnBu
@@ -390,19 +391,21 @@ census_fig.add_trace(
 )
 census_fig.add_trace(
     go.Pie(
+        title = 'Female',
+        title_font_size = 36,
         labels = census_df['Age'],
         values = census_df['Female'],
-        name = 'Female',
     ), 1, 2
 )
 census_fig.update_traces(
-    hole = .3,
-    hoverinfo = "label+percent+name")
+    hole = .5,
+    hoverinfo = "label+percent+name"
+)
 
 census_fig.update_layout(
     template = 'plotly_dark',
     font_family = 'Avenir',
-    font_size = 18,
+    font_size = 24,
     title_text = "Age Groups by Gender",
     title_x = 0.5,
     title_font_size = 40,
@@ -446,17 +449,15 @@ tab_2b = dbc.Container(fluid = True, children = [
                 style = dict(paddingBottom = 16)),
             dbc.Row([
                 dbc.Col([
-                    dbc.Row(html.H2('Male')),
+                    html.H2('Male'),
                     dbc.Row(tree_map_ma)
                 ],
                 align = 'center',
                 width = 6),
                 dbc.Col([
-                    dbc.Row(html.H2('Female')),
+                    html.H2('Female'),
                     dbc.Row(tree_map_fe)
-                ],
-                width = 6,
-                style = dict(textAlign = 'center')),
+                ], width = 6),
             ])
         ], width = 9)
     ])
@@ -520,8 +521,7 @@ death_locs_fig.add_traces(go.Scattermapbox(
         size = 15,
         color = 'yellowgreen',
         # symbol = 'triangle-up'
-)
-    
+    )
 ))
 
 death_locs_fig.update_layout(
