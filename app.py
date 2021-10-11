@@ -13,7 +13,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table as dt
-from dash_table.Format import Format, Group
+from dash_table.Format import Format, Scheme, Group
 import dash_bootstrap_components as dbc
 from plotly.express import data
 import dash_daq as daq
@@ -251,7 +251,12 @@ naples_df.rename(
 
 naples_table = dt.DataTable(
     data = naples_df.to_dict('records'),
-    columns = [{'name': i, 'id': i} for i in naples_df.columns],
+    columns = [
+        dict(name = 'Age', id = 'Age'),
+        dict(name = 'Male', id = 'Male', type = 'numeric', format = Format(precision = 1, scheme = Scheme.fixed)),
+        dict(name = 'Female', id = 'Female', type = 'numeric', format = Format(precision = 1, scheme = Scheme.fixed))
+    ],
+    # columns = [{'name': i, 'id': i} for i in naples_df.columns],
     style_data_conditional = table_style_cond,
     style_cell = table_style_cell,
     style_header = table_style_header,
@@ -462,7 +467,7 @@ tab_2b = dbc.Container(fluid = True, children = [
                 dbc.Col([
                     html.H2('Female'),
                     dbc.Row(tree_map_fe)
-                ], width = 6),
+                ], width = 6, align = 'end'),
             ])
         ], width = 9)
     ])
