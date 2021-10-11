@@ -520,15 +520,16 @@ death_locs_fig.update_layout(
     ),
     mapbox = dict(style = 'carto-darkmatter'),
     font = graph_font,
-    margin = dict(l=4, r=4, b=4, t=4),
+    margin = dict(l=0, r=0, b=0, t=0),
     hoverlabel_font_size = 24,
 )
 
 deaths_graph = dcc.Graph(figure = death_locs_fig)
 
 tab_3 = dbc.Col([
-    html.H1('(Amount Proportional to Dot Size)'),
-    deaths_graph
+    deaths_graph,
+    html.H1('(Amount of deaths proportional to dot size)'),
+
 ], className = 'graph')
 
 @app.callback(Output('tabs-content', 'children'),
