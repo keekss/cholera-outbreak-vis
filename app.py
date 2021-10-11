@@ -168,7 +168,7 @@ london_table = dt.DataTable(
     # For some reason, max height is 500px with fixed headers
     style_table = dict(
         height = full_height,
-        fontSize = 18
+        fontSize = 22
     ),
 )
 
@@ -201,6 +201,7 @@ london_lineg_fig.update_layout(
     legend_title = '',
     height = 850,
     font = graph_font,
+    hoverlabel_font_size = 24,
 )
 
 london_lineg_fig.update_traces(
@@ -261,7 +262,7 @@ age_groups = naples_df['Age']
 
 naples_fig = go.Figure(data=[
     go.Bar(name='Male', x=age_groups, y=naples_df['Male']),
-    go.Bar(name='Female', x=age_groups, y=naples_df['Female'])
+    go.Bar(name='Female', x=age_groups, y=naples_df['Female']),
 ])
 
 naples_fig.update_layout(
@@ -273,6 +274,7 @@ naples_fig.update_layout(
     yaxis_title = 'Deaths Per 10,000 People',
     height = 850,
     font = graph_font,
+    hoverlabel_font_size = 24,
 )
 
 naples_graph = dcc.Graph(
@@ -303,6 +305,7 @@ naples_lineg_fig.update_layout(
     legend_title = 'Gender',
     height = full_height,
     font = graph_font,
+    hoverlabel_font_size = 24,
 )
 
 naples_lineg = dcc.Graph(
@@ -362,7 +365,8 @@ gender_fig.update_layout(
     font = dict(
         family = 'Avenir',
         size = 18
-    )
+    ),
+    hoverlabel_font_size = 24
 )
 
 gender_pie = dcc.Graph(
@@ -411,6 +415,7 @@ census_fig.update_layout(
     title_font_size = 40,
     width = 1450,
     height = 547,
+    hoverlabel_font_size = 24,   
 )
 
 census_graph = dcc.Graph(
@@ -473,7 +478,7 @@ pump_lats = pump_locs_df.iloc[:,1]
 death_locs_df = pd.read_csv(
     'data/choleraDeathLocations.csv',
     names = ['Deaths', 'Lon', 'Lat'],
-    error_bad_lines=False)
+    error_bad_lines = False)
 
 death_locs_fig = px.scatter_mapbox(
     death_locs_df,
@@ -486,9 +491,15 @@ death_locs_fig = px.scatter_mapbox(
         lat = death_locs_df['Lat'].mean(),
     ),
     zoom = 16,
-    height = 840,
+    height = 800,
     template = 'plotly_dark',
 )
+
+death_locs_fig.add_traces(go.Scattermapbox(
+    name = 'Deaths',
+    lon = pump_lons,
+    lat = pump_lats,
+))
 
 death_locs_fig.add_traces(go.Scattermapbox(
     name = 'Pumps',
@@ -497,7 +508,6 @@ death_locs_fig.add_traces(go.Scattermapbox(
     marker = go.scattermapbox.Marker(
         size = 20,
         color = 'yellowgreen',
-        # symbol = 'triangle-up'
     )
 ))
 
@@ -510,7 +520,8 @@ death_locs_fig.update_layout(
     ),
     mapbox = dict(style = 'carto-darkmatter'),
     font = graph_font,
-    margin = dict(l=4, r=4, b=4, t=4)
+    margin = dict(l=4, r=4, b=4, t=4),
+    hoverlabel_font_size = 24,
 )
 
 deaths_graph = dcc.Graph(figure = death_locs_fig)
