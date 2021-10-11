@@ -475,30 +475,6 @@ death_locs_df = pd.read_csv(
     names = ['Deaths', 'Lon', 'Lat'],
     error_bad_lines=False)
 
-# death_locs_fig = px.scatter_mapbox(
-#     death_locs_df,
-#     lon = death_locs_df['Lon'],
-#     lat = death_locs_df['Lat'],
-#     size = death_locs_df['Deaths'],
-#     color_discrete_sequence = ['indianred'],
-#     center = dict(
-#         lon = death_locs_df['Lon'].mean(),
-#         lat = death_locs_df['Lat'].mean(),
-#     ),
-#     zoom = 16,
-#     height = 900,
-#     template = 'plotly_dark',  
-# )
-# death_locs_fig.add_traces(go.Scattermapbox(
-#     name = 'Pumps',
-#     lon = pump_lons,
-#     lat = pump_lats,
-#     marker = go.scattermapbox.Marker(
-#         size = 15,
-#         color = 'yellowgreen',
-#         # symbol = 'triangle-up'
-# )
-
 death_locs_fig = px.scatter_mapbox(
     death_locs_df,
     lon = death_locs_df['Lon'],
@@ -511,14 +487,15 @@ death_locs_fig = px.scatter_mapbox(
     ),
     zoom = 16,
     height = 840,
-    template = 'plotly_dark',  
+    template = 'plotly_dark',
 )
+
 death_locs_fig.add_traces(go.Scattermapbox(
     name = 'Pumps',
     lon = pump_lons,
     lat = pump_lats,
     marker = go.scattermapbox.Marker(
-        size = 15,
+        size = 20,
         color = 'yellowgreen',
         # symbol = 'triangle-up'
     )
@@ -531,15 +508,17 @@ death_locs_fig.update_layout(
             size = 36
         )
     ),
-    mapbox = dict(style = 'carto-darkmatter')
+    mapbox = dict(style = 'carto-darkmatter'),
+    font = graph_font,
+    margin = dict(l=4, r=4, b=4, t=4)
 )
 
-deaths_graph = dcc.Graph(
-    className = 'graph',
-    figure = death_locs_fig
-)
+deaths_graph = dcc.Graph(figure = death_locs_fig)
 
-tab_3 = deaths_graph
+tab_3 = dbc.Col([
+    html.H1('(Amount Proportional to Dot Size)'),
+    deaths_graph
+], className = 'graph')
 
 @app.callback(Output('tabs-content', 'children'),
               Input('tabs', 'value'))
