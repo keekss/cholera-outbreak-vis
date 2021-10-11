@@ -1,9 +1,6 @@
 body {
     background-color: #181818;
     padding: 10px;
-    /*
-    display: flex;
-    justify-content: center; */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -19,13 +16,11 @@ Section {
     border-style: ridge;
     border-width: 3px;
     min-height: 158px;
-    /* margin-left: 50%;
-    transform: translateX(-50%); */
 }
 
 #main-title {
     font-size: 54px;
-    margin-top: 8px;
+    margin-top: 20px;
 }
 
 #subtitle {
@@ -40,33 +35,6 @@ Section {
     padding-left: 10px;
 }
 
-.tree-map-img {
-    height: 100px;
-}
-
-/* .VirtualizedSelectFocusedOption {
-    background-color: black;
-} */
-
-
-/* 
-Div {
-    display: inline;
-} */
-
-/* #title-container {
-    width: 50%;
-    padding: 10px;
-    padding-right: 100px;
-}
-
-#extra-info-container {
-    float: right;
-    width: 40%
-}
-
-*/
-
 #extra-info-text {
     padding-top: 12px;
     width: 90%;
@@ -74,23 +42,12 @@ Div {
     vertical-align: center;
 }
 
-/* #tabs {
-    margin-top: 10px;    
-} */
-/*
-
-#tabs-content {
-
-}
-
-*/
-
 .graph {
     background-color: #111111;
     border-style: solid;
     border-width: 3px;
     border-color: whitesmoke;
-    padding: 2px;
+    padding: 8px;
     padding-left: 10px;
 }
 
@@ -98,23 +55,13 @@ Div {
     border-style: solid;
     border-width: 3px;
     border-color: whitesmoke;
-    height: 95%
+    width: 95%
 }
 
-
-/* .custom-tabs-container {
-    vertical-align: top;
-    background-color: green;
-    margin: auto;
-} */
-
 .graph-container {
-    background-color: pink;
     width: 95%;
     margin: auto;
 }
-
-
 
 .graph-tab {
     font-family: Avenir;
@@ -123,49 +70,10 @@ Div {
     margin: 10px 0px 10px 0px;
 }
 
-
-
-/* #deaths-table {
-    float: left;
-    vertical-align: top;
-    padding: 50px 50px 50px 50px;
-} */
-
 #deaths-graph-container {
-    float: right;
-    vertical-align: top;
-    padding: 50px 50px 50px 50px;
+    padding: 10px;
     border-width: 3px;
     border-color: black;
 }
-
-
-
-/* #extra-info-box {
-    color: whitesmoke;
-    text-align: center;
-
-} */
-
-/*
-    Maintain 16:9 aspect ratio
-    Referenced https://stackoverflow.com/questions/1495407/maintain-the-aspect-ratio-of-a-div-with-css
-*/
-
-/* .graph-box { */
-    /* margin: auto;
-    padding: 10px;
-    background: white; */
-    /* box-sizing: border-box; */
-    /* resize: horizontal; */
-    /* max-width: 95%;
-    height: calc(0.5625vw) */
-    /* display: grid;
-}
-
-.graph-box > * {
-    grid-area: 16/9;
-} */
-
 
 

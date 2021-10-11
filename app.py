@@ -7,7 +7,6 @@
 ## dash_bootstrap_components
 ## dash_daq
 
-from re import template
 import pandas as pd
 
 import dash
@@ -28,17 +27,13 @@ from plotly.subplots import make_subplots
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SLATE])
 
-theme = {
-    'dark': True
-}
+theme = dict(dark = True)
 
 app.layout = dbc.Container(fluid = True, children = [
     dbc.Container(fluid = True, children = [
         dbc.Row([
             dbc.Col(
-                html.Section(
-                # id = 'title-container',
-                children = [
+                html.Section([
                     html.H1(
                         '1854 Cholera Outbreak Visualization',
                         id = 'main-title',
@@ -48,7 +43,7 @@ app.layout = dbc.Container(fluid = True, children = [
                         style = {'padding-top': '0px'}
                     ),
                 ]),
-                width = {'size': 6, 'order': 'first'}
+                width = 6
             ),
             dbc.Col(
                 html.Section([
@@ -57,7 +52,6 @@ app.layout = dbc.Container(fluid = True, children = [
                         style = {'padding-top': '8px'}
                     ),
                     dbc.Row([
-                    # id = 'extra-info-container',
                         dbc.Col([
                             html.H4('Extra Info - Select'),
                             html.Div([
@@ -65,7 +59,7 @@ app.layout = dbc.Container(fluid = True, children = [
                                     id = 'extra-info-dropdown',
                                     options = [
                                         {'label': 'Data\'s Origin', 'value': 'origin'},
-                                        {'label': 'Visualization Tools & Libraries', 'value': 'tools'},
+                                        {'label': 'Tools & Libraries Used', 'value': 'tools'},
                                         {'label': 'Author', 'value': 'author'},
                                         {'label': 'None', 'value': 'none'},
                                     ],
@@ -172,7 +166,10 @@ london_table = dt.DataTable(
     style_header = table_style_header,
     fixed_rows = {'headers': True},
     # For some reason, max height is 500px with fixed headers
-    style_table = dict(height = full_height)
+    style_table = dict(
+        height = full_height,
+        fontSize = 18
+    ),
 )
 
 london_lineg_fig = px.line(
@@ -183,8 +180,8 @@ london_lineg_fig = px.line(
     # Referenced https://community.plotly.com/t/plotly-express-line-chart-color/27333/4
     template = 'plotly_dark',
     color_discrete_map = {
-        'Daily Attacks':        'sandybrown',
-        'Cumulative Attacks':   'orange',
+        'Daily Attacks':        'yellowgreen',
+        'Cumulative Attacks':   'yellowgreen',
         'Daily Deaths':         'red',
         'Cumulative Deaths':    'darkred',
     },
@@ -203,7 +200,11 @@ london_lineg_fig.update_layout(
     yaxis_title = 'Number of People',
     legend_title = '',
     height = 850,
-    font = graph_font
+    font = graph_font,
+)
+
+london_lineg_fig.update_traces(
+    line = dict(width = 5)
 )
 
 # Make cumulative lines dotted
@@ -253,7 +254,7 @@ naples_table = dt.DataTable(
     style_data_conditional = table_style_cond,
     style_cell = table_style_cell,
     style_header = table_style_header,
-    page_size = 21
+    style_table = dict(fontSize = 20),
 )
 
 age_groups = naples_df['Age']
@@ -290,10 +291,6 @@ naples_lineg_fig = px.line(
     x = 'Mean Age',
     y = naples_df.columns[1:3],
     template = 'plotly_dark',
-    # color_discrete_map = {
-    #     'Male': 'red',
-    #     'Female': 'blue',
-    # },
 )
 
 naples_lineg_fig.update_layout(
@@ -358,7 +355,6 @@ gender_fig = px.pie(
     title = 'Proportion of Population by Gender',
     template = 'plotly_dark',
     width = 442,
-
 )
 
 gender_fig.update_layout(
@@ -397,10 +393,11 @@ census_fig.add_trace(
         labels = census_df['Age'],
         values = census_df['Female'],
         name = 'Female',
-        # color_discrete_sequence = px.colors.sequential.GnBu
     ), 1, 2
 )
-census_fig.update_traces(hole=.3, hoverinfo="label+percent+name")
+census_fig.update_traces(
+    hole = .3,
+    hoverinfo = "label+percent+name")
 
 census_fig.update_layout(
     template = 'plotly_dark',
@@ -409,7 +406,8 @@ census_fig.update_layout(
     title_text = "Age Groups by Gender",
     title_x = 0.5,
     title_font_size = 40,
-    height = full_height,
+    width = 1450,
+    height = 547,
 )
 
 census_graph = dcc.Graph(
@@ -421,35 +419,48 @@ img_box = dict(
     paddingBottom = '8px',
 )
 
-tree_map_m = html.Div([
+tree_map_ma = html.Div([
     html.Img(
-        src=app.get_asset_url('tree_map_m.png'),
+        src = app.get_asset_url('tree_map_ma.png'),
         className = 'image',
     )],
     style = img_box
 )
-tree_map_f = html.Div([
+tree_map_fe = html.Div([
     html.Img(
-        src=app.get_asset_url('tree_map_f.png'),
+        src = app.get_asset_url('tree_map_fe.png'),
         className = 'image',
     )],
     style = img_box
 )
 
-tab_2b = dbc.Container(
+tab_2b = dbc.Container(fluid = True, children = [
     dbc.Row([
         dbc.Col([
             dbc.Row(census_table),
             dbc.Row(gender_pie, style = dict(paddingTop = 10)),
         ], width = 3),
-        dbc.Col(census_graph, width = 6),
         dbc.Col([
-            dbc.Row([tree_map_m, html.H2('Male')]),
-            dbc.Row([tree_map_f, html.H2('Female')]),
-        ], width = 3)
-    ],
-    ), fluid = True,
-)
+            dbc.Row(
+                census_graph,
+                style = dict(paddingBottom = 16)),
+            dbc.Row([
+                dbc.Col([
+                    dbc.Row(html.H2('Male')),
+                    dbc.Row(tree_map_ma)
+                ],
+                align = 'center',
+                width = 6),
+                dbc.Col([
+                    dbc.Row(html.H2('Female')),
+                    dbc.Row(tree_map_fe)
+                ],
+                width = 6,
+                style = dict(textAlign = 'center')),
+            ])
+        ], width = 9)
+    ])
+])
 
 pump_locs_df = pd.read_csv(
     'data/choleraPumpLocations.csv',
@@ -463,6 +474,30 @@ death_locs_df = pd.read_csv(
     names = ['Deaths', 'Lon', 'Lat'],
     error_bad_lines=False)
 
+# death_locs_fig = px.scatter_mapbox(
+#     death_locs_df,
+#     lon = death_locs_df['Lon'],
+#     lat = death_locs_df['Lat'],
+#     size = death_locs_df['Deaths'],
+#     color_discrete_sequence = ['indianred'],
+#     center = dict(
+#         lon = death_locs_df['Lon'].mean(),
+#         lat = death_locs_df['Lat'].mean(),
+#     ),
+#     zoom = 16,
+#     height = 900,
+#     template = 'plotly_dark',  
+# )
+# death_locs_fig.add_traces(go.Scattermapbox(
+#     name = 'Pumps',
+#     lon = pump_lons,
+#     lat = pump_lats,
+#     marker = go.scattermapbox.Marker(
+#         size = 15,
+#         color = 'yellowgreen',
+#         # symbol = 'triangle-up'
+# )
+
 death_locs_fig = px.scatter_mapbox(
     death_locs_df,
     lon = death_locs_df['Lon'],
@@ -474,9 +509,8 @@ death_locs_fig = px.scatter_mapbox(
         lat = death_locs_df['Lat'].mean(),
     ),
     zoom = 16,
-    height = 800,
-    template = 'plotly_dark',
-    
+    height = 840,
+    template = 'plotly_dark',  
 )
 death_locs_fig.add_traces(go.Scattermapbox(
     name = 'Pumps',
@@ -486,9 +520,10 @@ death_locs_fig.add_traces(go.Scattermapbox(
         size = 15,
         color = 'yellowgreen',
         # symbol = 'triangle-up'
-    )
+)
     
 ))
+
 death_locs_fig.update_layout(
     legend = dict(
         font = dict(
@@ -496,17 +531,13 @@ death_locs_fig.update_layout(
             size = 36
         )
     ),
-    mapbox = dict(
-        style = 'carto-darkmatter',
-    )
+    mapbox = dict(style = 'carto-darkmatter')
 )
 
 deaths_graph = dcc.Graph(
     className = 'graph',
     figure = death_locs_fig
 )
-
-
 
 tab_3 = deaths_graph
 
@@ -522,18 +553,18 @@ def render_content(tab):
     elif tab == 'tab-3':
         return tab_3
 
-extra_info_dict = {
-    'origin': [
+extra_info_dict = dict(
+    origin = [
         'The dataset was created and compiled by Robin Wilson in January 2011.',
         html.Br(),
         'For more of Dr. Wilson\'s work, see www.rtwilson.com/academic.',
         html.Br(),
         'Contact: robin@rtwilson.com'
     ],
-    'author': 'This visualization was created by Kiko Whiteley, a student at the University of Hawaii at Manoa studying Math and Computer Science.',
-    'tools': 'This visualization uses Dash, a python library that uses Plotly for underlying graphics.  Graphs were made with Plotly Express and Dash Bootstrap components.',
-    'none': ''
-}
+    author = 'This visualization was created by Kiko Whiteley, a student at the University of Hawaii at Manoa studying Math and Computer Science.',
+    tools = 'This visualization uses Dash, a python library that uses Plotly for underlying graphics.  Graphs were made with Plotly Express and Dash Bootstrap components.',
+    none = ''
+)
 
 @app.callback(
    Output('extra-info-text', 'children'),
