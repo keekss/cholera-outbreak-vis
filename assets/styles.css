@@ -10,7 +10,6 @@ h1, h2, h3, h4, h5, h6 {
     font-family: Avenir;
     color: whitesmoke;
     text-align: center;
-    padding: 2px 8px 2px 8px;
 }
 
 Section {
@@ -19,17 +18,26 @@ Section {
     padding: 6px 6px 6px 6px;
     border-style: ridge;
     border-width: 3px;
-    min-height: 180px;
+    min-height: 158px;
     /* margin-left: 50%;
     transform: translateX(-50%); */
 }
 
+#main-title {
+    font-size: 54px;
+    margin-top: 8px;
+}
+
+#subtitle {
+    margin-top: 12px;
+}
+
 #extra-info-dropdown {
     font-family: Avenir;
-    width: 80%;
     margin: auto;
     color: black;
-    padding: 10px;
+    padding: 2px;
+    padding-left: 10px;
 }
 
 .tree-map-img {
@@ -63,6 +71,7 @@ Div {
     padding-top: 12px;
     width: 90%;
     margin: auto;
+    vertical-align: center;
 }
 
 /* #tabs {
@@ -77,16 +86,19 @@ Div {
 */
 
 .graph {
+    background-color: #111111;
     border-style: solid;
     border-width: 3px;
-    border-color: whitesmoke
+    border-color: whitesmoke;
+    padding: 2px;
+    padding-left: 10px;
 }
 
 .image {
     border-style: solid;
     border-width: 3px;
     border-color: whitesmoke;
-    height: 90%
+    height: 95%
 }
 
 
@@ -111,14 +123,7 @@ Div {
     margin: 10px 0px 10px 0px;
 }
 
-#main-title {
-    font-size: 36px;
-    margin-top: 8px;
-}
 
-#subtitle {
-    margin-top: 12px;
-}
 
 /* #deaths-table {
     float: left;

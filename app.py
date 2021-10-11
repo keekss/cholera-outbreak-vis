@@ -43,40 +43,37 @@ app.layout = dbc.Container(fluid = True, children = [
                         '1854 Cholera Outbreak Visualization',
                         id = 'main-title',
                     ),
-                    html.H6(
+                    html.H4(
                         'ICS 484 - Project 1 - Kiko Whiteley, Fall 2021',
                         style = {'padding-top': '0px'}
-                    ),
-                    html.H5(html.I(
-                        'Visualizing reported symptoms (attacks) of Cholera and related deaths along with population features in London and Naples for 42 days, beginning on August 19, 1854.'),
-                        style = {'padding-top': '8px'}
                     ),
                 ]),
                 width = {'size': 6, 'order': 'first'}
             ),
             dbc.Col(
                 html.Section([
-                dbc.Row([
-                # id = 'extra-info-container',
-                    dbc.Col(
-                        html.H2('Extra Info - Select', style = {'padding-top': '8px'}), width = 6),
-                    dbc.Col(
-                        html.Div([
-                            dcc.Dropdown(
-                                id = 'extra-info-dropdown',
-                                options = [
-                                    {'label': 'Data\'s Origin', 'value': 'origin'},
-                                    {'label': 'Visualization Tools & Libraries', 'value': 'tools'},
-                                    {'label': 'Author', 'value': 'author'},
-                                    {'label': 'None', 'value': 'none'},
-                                ],
-                            ),
-                        ]),
-                        width = 6
-                    )]),
-                dbc.Row([html.H4(id = 'extra-info-text')])
-                ]),
-                width = {'size': 6, 'order': 'last'},
+                    html.H5(html.I(
+                        'Visualizing reported symptoms (attacks) of Cholera and related deaths along with population features in London and Naples for 42 days, beginning on August 19, 1854.'),
+                        style = {'padding-top': '8px'}
+                    ),
+                    dbc.Row([
+                    # id = 'extra-info-container',
+                        dbc.Col([
+                            html.H4('Extra Info - Select'),
+                            html.Div([
+                                dcc.Dropdown(
+                                    id = 'extra-info-dropdown',
+                                    options = [
+                                        {'label': 'Data\'s Origin', 'value': 'origin'},
+                                        {'label': 'Visualization Tools & Libraries', 'value': 'tools'},
+                                        {'label': 'Author', 'value': 'author'},
+                                        {'label': 'None', 'value': 'none'},
+                                    ],
+                                ),
+                            ])], width = 3),
+                        dbc.Col(html.H5(id = 'extra-info-text'), width = 9),
+                    ]),
+                ])
             )
         ])
     ]),
@@ -165,6 +162,8 @@ table_style_header = {
     'text-align': 'center'
 }
 
+full_height = 850
+
 london_table = dt.DataTable(
     data = london_df.to_dict('records'),
     columns = [{'name': i, 'id': i} for i in london_df.columns],
@@ -172,7 +171,8 @@ london_table = dt.DataTable(
     style_cell = table_style_cell,
     style_header = table_style_header,
     fixed_rows = {'headers': True},
-    style_table = {'maxHeight': 770},
+    # For some reason, max height is 500px with fixed headers
+    style_table = dict(height = full_height)
 )
 
 london_lineg_fig = px.line(
@@ -190,14 +190,20 @@ london_lineg_fig = px.line(
     },
 )
 
+graph_font = dict(
+    family = 'Avenir',
+    size = 20,
+)
+
 london_lineg_fig.update_layout(
     plot_bgcolor = '#181818',
-    title='Attacks & Deaths in London vs. Time',
+    title = 'Attacks & Deaths in London vs. Time',
     title_x = 0.5,
     xaxis_title = 'Days Elapsed Since August 19, 1854',
     yaxis_title = 'Number of People',
     legend_title = '',
-    height = 770,
+    height = 850,
+    font = graph_font
 )
 
 # Make cumulative lines dotted
@@ -221,7 +227,8 @@ london_lineg_fig.update_traces(
 
 london_lineg = dcc.Graph(
     figure = london_lineg_fig,
-    className = 'graph')
+    className = 'graph'
+)
 
 tab_1 = dbc.Row([
     dbc.Col(london_table, width = 3),
@@ -263,7 +270,8 @@ naples_fig.update_layout(
     title_x = 0.5,
     xaxis_title = 'Age Group (Years)',
     yaxis_title = 'Deaths Per 10,000 People',
-    height = 770
+    height = 850,
+    font = graph_font,
 )
 
 naples_graph = dcc.Graph(
@@ -292,10 +300,12 @@ naples_lineg_fig.update_layout(
     # plot_bgcolor = '#181818',
     title = 'Deaths in Naples vs. Age Group & Gender',
     title_x = 0.5,
+    title_y = 0.97,
     yaxis_title = 'Deaths Per 10,000 People',
     xaxis_title = 'Mean Age (Years)',
     legend_title = 'Gender',
-    height = 770,
+    height = full_height,
+    font = graph_font,
 )
 
 naples_lineg = dcc.Graph(
@@ -333,6 +343,10 @@ census_table = dt.DataTable(
         dict(name = 'Male', id = 'Male', type = 'numeric', format = Format().group(True)),
         dict(name = 'Female', id = 'Female', type = 'numeric', format = Format().group(True)),        
     ],
+    style_table = dict(
+        width = 460,
+        fontSize = 18,
+    ),
     style_data_conditional = table_style_cond,
     style_cell = table_style_cell,
     style_header = table_style_header,
@@ -343,7 +357,16 @@ gender_fig = px.pie(
     names =  ['Male', 'Female'],
     title = 'Proportion of Population by Gender',
     template = 'plotly_dark',
-    width = 400,
+    width = 442,
+
+)
+
+gender_fig.update_layout(
+    title_x = 0.5,
+    font = dict(
+        family = 'Avenir',
+        size = 18
+    )
 )
 
 gender_pie = dcc.Graph(
@@ -364,6 +387,8 @@ census_fig.add_trace(
         labels = census_df['Age'],
         values = census_df['Male'],
         name = 'Male',
+        marker = dict(colors = px.colors.sequential.Viridis),
+        legendgrouptitle = dict(text = 'Age')
         # color_discrete_sequence = px.colors.sequential.GnBu
     ), 1, 1
 )
@@ -379,7 +404,12 @@ census_fig.update_traces(hole=.3, hoverinfo="label+percent+name")
 
 census_fig.update_layout(
     template = 'plotly_dark',
+    font_family = 'Avenir',
+    font_size = 18,
     title_text = "Age Groups by Gender",
+    title_x = 0.5,
+    title_font_size = 40,
+    height = full_height,
 )
 
 census_graph = dcc.Graph(
@@ -406,22 +436,20 @@ tree_map_f = html.Div([
     style = img_box
 )
 
-tab_2b = dbc.Row([
-    dbc.Col([
-        dbc.Row(census_table),
-        dbc.Row(gender_pie),
-    ], 
-    width = 3,
-    style = dict(
-        margin = 'auto',
-    )),
-    dbc.Col(census_graph, width = 6),
-    dbc.Col([
-        dbc.Row([tree_map_m, html.H2('Male')]),
-        dbc.Row([tree_map_f, html.H2('Female')]),
-    ], width = 3, style = dict(margin = 'auto')
-    )
-])
+tab_2b = dbc.Container(
+    dbc.Row([
+        dbc.Col([
+            dbc.Row(census_table),
+            dbc.Row(gender_pie, style = dict(paddingTop = 10)),
+        ], width = 3),
+        dbc.Col(census_graph, width = 6),
+        dbc.Col([
+            dbc.Row([tree_map_m, html.H2('Male')]),
+            dbc.Row([tree_map_f, html.H2('Female')]),
+        ], width = 3)
+    ],
+    ), fluid = True,
+)
 
 pump_locs_df = pd.read_csv(
     'data/choleraPumpLocations.csv',
