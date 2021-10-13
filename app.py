@@ -359,10 +359,15 @@ census_table = dt.DataTable(
 
 gender_fig = px.pie(
     values = [census_df['Male'].iloc[-1], census_df['Female'].iloc[-1]],
+    color = ['Male', 'Female'],
     names =  ['Male', 'Female'],
     title = 'Proportion of Population by Gender',
     template = 'plotly_dark',
     width = 442,
+    color_discrete_map = dict(
+        Male = '#636EFB',
+        Female = '#EE563B',
+    )
 )
 
 gender_fig.update_layout(
