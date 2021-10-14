@@ -358,7 +358,7 @@ census_table = dt.DataTable(
 )
 
 gender_fig = px.pie(
-    values = [census_df['Male'].iloc[-1], census_df['Female'].iloc[-1]],
+    values = [census_table_df['Male'].iloc[-1], census_table_df['Female'].iloc[-1]],
     color = ['Male', 'Female'],
     names =  ['Male', 'Female'],
     title = 'Proportion of Population by Gender',
